@@ -5,10 +5,12 @@ from pathlib import Path
 with open("session.txt") as f:
     cookies = {"session": f.read().strip()}
 
-datadir = Path('./data')
+datadir = Path(__file__) / ('../data')
 
 
 makedirs(datadir, exist_ok=True)
+
+print("fetching inputs...")
 
 for i in range(1,26):
     filepath = datadir / f'{i:02d}.input.txt'
@@ -23,4 +25,4 @@ for i in range(1,26):
     
     with open(filepath, 'w') as f:
         f.write(r.text)
-        print(f'fetch {str(filepath)}')
+        print(f'fetched {str(filepath)}')
