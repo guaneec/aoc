@@ -1,4 +1,5 @@
-from collections import deque
+from collections import deque, defaultdict
+
 
 
 class Machine:
@@ -7,15 +8,26 @@ class Machine:
         return (op % 100, (op // 100 % 10, op // 1000 % 10, op // 10000 % 10))
 
     def __init__(self, code):
-        self.code = code
+        self.code = defaultdict(int, {i: v for (i, v) in enumerate(code)})
         self.ptr = 0
-        self.iq = deque()
+        self.iq = deque()   
         self.oq = deque()
-        self.on_wait = lambda: None
+        self.rb = 0
     
     def t(self, mode, val):
-        return val if mode else self.code[val]
-    
+        if mode == 0:
+            return self.code[val]
+        if mode == 1: 
+            return val 
+        assert(mode == 2)
+        return self.code[self.rb + val]
+
+    def u(self, mode, val):
+        if mode == 0:
+            return val
+        assert(mode == 2)
+        return self.rb + val
+
     def run(self, n=None, v=None, inp=None):
         if n is not None:
             self.code[1] = n
@@ -34,15 +46,15 @@ class Machine:
             if op == 99:
                 break
             elif op == 1:
-                self.do_add(modes, c[self.ptr+1], c[self.ptr+2], c[self.ptr+3])
+                self.code[self.u(modes[2], c[self.ptr+3])] = self.t(modes[0], c[self.ptr+1]) + self.t(modes[1], c[self.ptr+2])
                 self.ptr += 4
             elif op == 2:
-                self.do_mult(modes, c[self.ptr+1], c[self.ptr+2], c[self.ptr+3])
+                self.code[self.u(modes[2], c[self.ptr+3])] = self.t(modes[0], c[self.ptr+1]) * self.t(modes[1], c[self.ptr+2])
                 self.ptr += 4
             elif op == 3:
                 if not self.iq:
-                    return
-                self.code[c[self.ptr+1]] = self.iq.popleft()
+                    return False
+                self.code[self.u(modes[0], c[self.ptr+1])] = self.iq.popleft()
                 self.ptr += 2
             elif op == 4:
                 self.do_output(modes, c[self.ptr+1])
@@ -58,12 +70,15 @@ class Machine:
                 else:
                     self.ptr += 3
             elif op == 7:
-                self.code[c[self.ptr+3]] = self.t(modes[0], c[self.ptr+1]) < self.t(modes[1], c[self.ptr+2])
+                self.code[self.u(modes[2], c[self.ptr+3])]  = self.t(modes[0], c[self.ptr+1]) < self.t(modes[1], c[self.ptr+2])
                 self.ptr += 4
             elif op == 8:
-                self.code[c[self.ptr+3]] = self.t(modes[0], c[self.ptr+1]) == self.t(modes[1], c[self.ptr+2])
+                self.code[self.u(modes[2], c[self.ptr+3])]  = self.t(modes[0], c[self.ptr+1]) == self.t(modes[1], c[self.ptr+2])
                 self.ptr += 4
-        return self.oq
+            elif op == 9:
+                self.rb += self.t(modes[0], c[self.ptr+1])
+                self.ptr += 2
+        return True
     
     def do_add(self, modes, r1, r2, r3):
         self.code[r3] = self.t(modes[0], r1) + self.t(modes[1], r2)
