@@ -104,10 +104,6 @@ ops (99 : _) c = c { halted = True }
 runInput :: [Int] -> Computer -> [Int]
 runInput inp c =
     let ci = c { input = inp }
-        f (c, l) = let (o, c') = stepio c in (c', o : l)
-    in  iterate f (ci, [])
-            & find (\(c, _) -> halted c)
-            & fromJust
-            & snd
-            & catMaybes
-            & reverse
+        (o, c') = stepio ci
+        f c = let (o, c') = stepio c in (o, c):f c'
+    in f ci & takeWhile (not.halted.snd) & fmap fst & catMaybes
