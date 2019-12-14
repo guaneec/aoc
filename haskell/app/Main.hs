@@ -6,13 +6,15 @@ import System.Environment
 
 import qualified D01 (p1, p2)
 import qualified D02 (p1, p2)
+import qualified D05 (p1, p2)
 
 pns :: [Int]
-pns = [1..2]
+pns = [1,2,5]
 
 parts :: Int -> [String -> String]
 parts 1 = [show . D01.p1, show . D01.p2]
 parts 2 = [show . D02.p1, show . D02.p2]
+parts 5 = [show . D05.p1, show . D05.p2]
 
 
 getInput :: Int -> IO String
