@@ -3,17 +3,12 @@ from pathlib import Path
 import subprocess
 import sys
 import os
+from .. import aoc
 
 rootdir = Path(__file__) / '../../../'
 
 def getinput(day):
-    p = rootdir / f'data/2019/{day:02d}.input.txt'
-    if not p.is_file():
-        cp = subprocess.run(f"python {rootdir / 'data.py'}", stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        print(cp.stdout.decode('utf-8'))
-        cp.check_returncode()
-    with open(p) as f:
-        return f.read()
+    return aoc.getinput(2019, day)
 
 class Machine:
     @staticmethod

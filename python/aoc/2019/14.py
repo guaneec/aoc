@@ -1,4 +1,4 @@
-from aoc2018 import getinput
+from .util import getinput
 
 from collections import defaultdict
 import networkx as nx

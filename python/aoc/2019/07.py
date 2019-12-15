@@ -1,6 +1,6 @@
 from itertools import permutations
 
-from aoc2018 import argmax, Machine
+from .util import argmax, Machine
 
 
 def throut(c, ps, i=0):

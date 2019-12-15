@@ -1,5 +1,5 @@
 from os import getcwd
-from aoc2018 import getinput
+from .util import getinput
 
 nums = [int(i) for i in getinput(1).splitlines()]
 fuel = lambda i: (i // 3) - 2

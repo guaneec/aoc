@@ -1,4 +1,4 @@
-from aoc2018 import getinput, Machine
+from .util import getinput, Machine
 
 s = getinput(15)
 c = [int(x) for x in s.strip().split(',')]
