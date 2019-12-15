@@ -20,7 +20,7 @@ parts 7 = [show . D07.p1, show . D07.p2]
 
 
 getInput :: Int -> IO String
-getInput n = readFile $ printf "../data/%02d.input.txt" n
+getInput n = readFile $ printf "../data/2019/%02d.input.txt" n
 
 runDay :: Int -> IO ()
 runDay n = do
