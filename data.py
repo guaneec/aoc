@@ -2,7 +2,7 @@ import requests
 from os import makedirs
 from pathlib import Path
 
-with open("session.txt") as f:
+with open(Path(__file__) / "../session.txt") as f:
     cookies = {"session": f.read().strip()}
 
 datadir = Path(__file__) / ('../data')
