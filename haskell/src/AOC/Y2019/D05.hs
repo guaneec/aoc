@@ -1,8 +1,8 @@
-module D05 where
+module AOC.Y2019.D05 where
 
 import           Data.Functor
 import           Data.Function
-import           Machine
+import           AOC.Y2019.Machine
 
 
 pp :: String -> [Int]

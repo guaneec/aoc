@@ -1,7 +1,8 @@
-module D01 where
+module AOC.Y2019.D01 where
 
 import Data.Functor
 import Data.Function
+import AOC.Common
 
 p1 :: String -> Int
 p1 s = s & lines <&> read <&> fuel & sum

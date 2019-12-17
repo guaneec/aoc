@@ -1,4 +1,4 @@
-module D02 where
+module AOC.Y2019.D02 where
 
 import           Data.Functor
 import           Data.Function
@@ -7,7 +7,7 @@ import qualified Data.Map                      as Map
 import           Data.Foldable
 import           Data.Char
 import           Data.Maybe
-import Machine
+import AOC.Y2019.Machine
 
 p1 :: String -> Int
 p1 s =

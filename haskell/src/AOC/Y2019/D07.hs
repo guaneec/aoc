@@ -1,4 +1,4 @@
-module D07 where
+module AOC.Y2019.D07 where
 
 import Data.Functor
 import Data.Function
@@ -6,7 +6,7 @@ import Data.Foldable
 import Data.List
 import Data.Ord
 
-import Machine
+import AOC.Y2019.Machine
 
 
 p1 s = maximum $ f <$> permutations [0..4]

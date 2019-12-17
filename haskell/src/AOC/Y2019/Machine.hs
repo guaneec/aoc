@@ -1,4 +1,4 @@
-module Machine where
+module AOC.Y2019.Machine where
 
 import           Data.Map                       ( Map )
 import qualified Data.Map                      as Map

@@ -21,20 +21,46 @@ description:         Please see the README on GitHub at <https://github.com/gith
 
 dependencies:
 - base >= 4.7 && < 5
+- containers
 
 library:
   source-dirs: src
   dependencies:
   - containers
+  - directory
+  - array
+  - vector
+  - mtl
+  - time >= 1.9.3
+  - split
+  - regex-tdfa
+  - lens
+  - megaparsec
+  - MemoTrie 
+  - psqueues
+  - linear
+
+
+ghc-options:
+- -threaded
+- -rtsopts
+- -with-rtsopts=-N
 
 executables:
-  main:
-    main:                Main.hs
-    source-dirs:         app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
+  y19d01:
+    main: Main.hs
+    source-dirs: app/2019/01
+    dependencies:
+    - aoc2019
+  y19d02:
+    main: Main.hs
+    source-dirs: app/2019/02
+    dependencies:
+    - aoc2019
+
+  y18d01:
+    main: Main.hs
+    source-dirs: app/2018/01
     dependencies:
     - aoc2019
 
