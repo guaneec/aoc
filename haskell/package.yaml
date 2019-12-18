@@ -57,6 +57,13 @@ executables:
     source-dirs: app/2019/02
     dependencies:
     - aoc2019
+  y19d18:
+    main: Main.hs
+    source-dirs: app/2019/18
+    dependencies:
+    - aoc2019
+    - psqueues
+    - MemoTrie 
 
   y18d01:
     main: Main.hs
