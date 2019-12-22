@@ -21,6 +21,7 @@ class Machine:
         self.iq = deque()   
         self.oq = deque()
         self.rb = 0
+        self.halted = False
     
     def t(self, mode, val):
         if mode == 0:
@@ -52,6 +53,7 @@ class Machine:
             op, modes = self.parse_op(self.code[self.ptr])
             c = self.code
             if op == 99:
+                self.halted = True
                 break
             elif op == 1:
                 self.code[self.u(modes[2], c[self.ptr+3])] = self.t(modes[0], c[self.ptr+1]) + self.t(modes[1], c[self.ptr+2])
@@ -100,6 +102,34 @@ class Machine:
     def do1202(self):
         self.code[1] = 12
         self.code[2] = 2
+
+    def interact(self):
+        self.resume()
+        o = ''.join(chr(c) for c in self.oq if c < 0x110000)
+        on = [c for c in self.oq if c >= 0x110000]
+        print(o, end='')
+        if on:
+            print(f'NONASCII: {on}')
+        self.oq.clear()
+        while not self.halted:
+            print('>>> ', end='')
+            self.iq.extend(ord(c) for c in input())
+            self.iq.append(ord('\n'))
+            self.resume()
+            o = ''.join(chr(c) for c in self.oq if c < 0x110000)
+            on = [c for c in self.oq if c >= 0x110000]
+            print(o, end='')
+            if on:
+                print(f'NONASCII: {on}')
+            self.oq.clear()
+
+    def readLine(self, s):
+        self.iq.extend(ord(c) for c in s + '\n')
+
+    def readLines(self, s):
+        for l in s.strip().splitlines():
+            self.readLine(l)
+
 
 def argmax(f, xs):
     x0 = next(xs)
