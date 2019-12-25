@@ -1,44 +1,11 @@
 from collections import deque, defaultdict
-from queue import PriorityQueue
 from .util import getinput
+from ..aoc import bfs, dij
 from itertools import groupby
 import numpy as np
 
 
 join = ''.join
-
-def bfs(seeds, neighbors):
-    q = list(seeds)
-    seen = set(seeds)
-    d = 0
-    while q:
-        qq = []
-        for n in q:
-            yield d, n
-            nb = list(neighbors(n))
-            qq.extend(nn for nn in nb if nn not in seen)
-            seen.update(nb)
-            pass
-        d += 1
-        q = qq
-
-def dij(seeds, neighbors):
-    q = PriorityQueue()
-    dists = {}
-    for s in seeds:
-        q.put_nowait((0, s))
-    
-    while not q.empty():
-        d, n = q.get_nowait()
-        yield d, n
-        for nd, nn in neighbors(n):
-            dNew = d + nd
-            if nn in dists and dists[nn] <= dNew:
-                continue
-            dists[nn] = dNew
-            q.put_nowait((dNew, nn))
-            
-
 
 s = getinput(20)
 
