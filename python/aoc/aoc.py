@@ -51,3 +51,12 @@ def dij(seeds, neighbors):
                 continue
             dists[nn] = dNew
             q.put_nowait(PrioritizedItem(dNew, nn))
+
+def rep(f, x, g=lambda x: x):
+    s = set()
+    while True:
+        xx = g(x)
+        if xx in s:
+            return xx
+        s.add(xx)
+        x = f(x)
