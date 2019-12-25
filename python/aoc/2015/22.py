@@ -41,7 +41,6 @@ class Game:
     poisoned: int = 0
     recharging: int = 0
     cost: int = 0
-    log: str = ""
 
     def gameover(self):
         return self.bhp <= 0 or self.php <= 0
@@ -75,7 +74,6 @@ class Game:
     def missile(self):
         c = copy(self)
         c.bhp -= 4
-        c.log = c.log + "m"
         return c
 
     @spell(73)
@@ -83,7 +81,6 @@ class Game:
         c = copy(self)
         c.bhp -= 2
         c.php += 2
-        c.log = c.log + "d"
         return c
 
     @spell(113)
@@ -92,7 +89,6 @@ class Game:
             return
         c = copy(self)
         c.shielded = 6
-        c.log = c.log + "s"
         return c
         
     @spell(173)
@@ -101,7 +97,6 @@ class Game:
             return
         c = copy(self)
         c.poisoned = 6
-        c.log = c.log + "p"
         return c
         
         
@@ -111,7 +106,6 @@ class Game:
             return
         c = copy(self)
         c.recharging = 5
-        c.log = c.log + "r"
         return c
 
     def choices(self):
@@ -131,7 +125,7 @@ def nb(game: Game):
 
 def p1(hp, mp, bhp, dmg, hard=False):
     g = Game(hp, mp, bhp, dmg, hard)
-    for cost, g in dij([g], nb):
+    for _, g in dij([g], nb):
         if g.bhp <= 0:
             return g
 
