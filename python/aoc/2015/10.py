@@ -15,20 +15,26 @@ def say(s):
     >>> say('111221')
     '312211'
     """
-    o = ''
-    for k, g in groupby(s):
-        o += f'{len(list(g))}{k}'
+    return ''.join(str(z) for z in sayi(int(x) for x in s))
+
+def sayi(nums):
+    o = []
+    for k, g in groupby(nums):
+        o.append(len(list(g)))
+        o.append(k)
     return o
+    
 
 doctest.testmod()
 
 s = getinput(10).strip()
+nums = [int(x) for x in s]
 for _ in range(40):
-    s = say(s)
+    nums = sayi(nums)
 
-print(len(s))
+print(len(nums))
 
 for _ in range(10):
-    s = say(s)
+    nums = sayi(nums)
     
-print(len(s))
+print(len(nums))
