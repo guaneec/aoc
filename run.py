@@ -12,7 +12,13 @@ commands = {
         'dir': './nim',
         'build': 'nim c --define:release {y}/D{d:02d}.nim',
         'run': str(Path('./nim/{y}/D{d:02d}.exe').resolve())
-    }
+    },
+    'kotlin': {
+        'dir': './kotlin',
+        'build': 'gradle build',
+        'run': 'kotlin -classpath build/classes/kotlin/main/ aoc.Y{y}.D{d:02d}Kt'
+    },
+
 }
 
 
@@ -46,15 +52,15 @@ for y in args.years:
             if 'build' in v:
                 build_cmd = v['build'].format(y=y, d=d)
                 print(f'Building {k}')
-                print(build_cmd)
-                run(build_cmd, check=True)
+                print('>', build_cmd)
+                run(build_cmd, check=True, shell=True)
             run_cmd = v['run'].format(y=y, d=d)
             if args.command == 'run':
                 print(f'Running {k}')
-                print(run_cmd)
-                run(run_cmd, check=True)
+                print('>', run_cmd)
+                run(run_cmd, check=True, shell=True)
             elif args.command == 'bench':
                 print(f'Benching {k}')
                 bench_cmd = f'hyperfine -w 1 -m 2  "{run_cmd}"'
-                print(bench_cmd)
-                run(bench_cmd, check=True)
+                print('>', bench_cmd)
+                run(bench_cmd, check=True, shell=True)
