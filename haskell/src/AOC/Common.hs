@@ -4,6 +4,8 @@ import Text.Printf
 import System.Directory
 import Data.Array
 import Data.Foldable
+import Data.Map (Map)
+import qualified  Data.Map as Map
 
 getInput :: Int -> Int -> IO String
 getInput year day = readFile (printf "../data/%d/%02d.input.txt" year day)
@@ -43,3 +45,6 @@ adj8 (y, x) =
 
 countIf :: Foldable t => (a -> Bool) -> t a -> Int
 countIf f = length . (filter f) . toList
+
+histogram :: Ord a => [a] -> Map a Int
+histogram = Map.fromListWith (+) . (`zip` repeat 1)
