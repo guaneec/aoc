@@ -66,10 +66,14 @@ for y in args.years:
             if args.command == 'run':
                 print(f'Running {k}')
                 print('>', run_cmd)
-                p = run(run_cmd, check=True, shell=True, capture_output=True)
-                print(str(p.stdout, 'utf-8'), end='')
+                p = run(run_cmd, check=True, shell=True, encoding='utf-8', capture_output=True)
+                if p.stdout:
+                    print(p.stdout, end='')
+                if p.stderr:
+                    print(p.stderr, end='')
+                p.check_returncode()
                 if args.save:
-                    with open(datadir / f'{y}/{d:02d}.output.txt', 'wb') as f:
+                    with open(datadir / f'{y}/{d:02d}.output.txt', 'w') as f:
                         f.write(p.stdout)
                         print(f'Output saved to {f.name}')
             elif args.command == 'bench':
