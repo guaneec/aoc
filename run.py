@@ -6,19 +6,23 @@ from pathlib import Path
 commands = {
     'python': {
         'dir': './python',
-        'run': 'python -m aoc.{y}.{d:02d}'
+        'run': 'python -m aoc.{y}.{d}'
     },
     'nim': {
         'dir': './nim',
-        'build': 'nim c --define:release {y}/D{d:02d}.nim',
-        'run': str(Path('./nim/{y}/D{d:02d}.exe').resolve())
+        'build': 'nim c --define:release {y}/D{d}.nim',
+        'run': str(Path('./nim/{y}/D{d}.exe').resolve())
     },
     'kotlin': {
         'dir': './kotlin',
         'build': 'gradle build',
-        'run': 'kotlin -classpath build/classes/kotlin/main/ aoc.Y{y}.D{d:02d}Kt'
+        'run': 'kotlin -classpath build/classes/kotlin/main/ aoc.Y{y}.D{d}Kt'
     },
-
+    'haskell': {
+        'dir': './haskell',
+        'build': 'stack ghc app/{y}/{d}/Main.hs',
+        'run': str(Path('./haskell/app/{y}/{d}/Main.exe').resolve())
+    },
 }
 
 
@@ -47,14 +51,15 @@ for y in args.years:
             if k not in args.names:
                 continue
             os.chdir(cwd)
+            yd = dict(y=y, d=f'{d:02d}')
             if 'dir' in v:
                 os.chdir(v['dir'])
             if 'build' in v:
-                build_cmd = v['build'].format(y=y, d=d)
+                build_cmd = v['build'].format(**yd)
                 print(f'Building {k}')
                 print('>', build_cmd)
                 run(build_cmd, check=True, shell=True)
-            run_cmd = v['run'].format(y=y, d=d)
+            run_cmd = v['run'].format(**yd)
             if args.command == 'run':
                 print(f'Running {k}')
                 print('>', run_cmd)
