@@ -66,7 +66,7 @@ for y in args.years:
             if args.command == 'run':
                 print(f'Running {k}')
                 print('>', run_cmd)
-                p = run(run_cmd, check=True, shell=True, encoding='utf-8', capture_output=True)
+                p = run(run_cmd, shell=True, encoding='utf-8', capture_output=True)
                 if p.stdout:
                     print(p.stdout, end='')
                 if p.stderr:
