@@ -25,7 +25,7 @@ p2 :: String -> Int
 p2 s =
     s
         & wordsBy (`elem` ", ")
-        & foldl' f ((1, 0), ((0, 0), Set.singleton ((0, 0)), First Nothing))
+        & foldl' f ((1, 0), ((0, 0), Set.singleton (0, 0), First Nothing))
         & (\(_, (_, _, First (Just a))) -> dist a)
   where
     f ((dy, dx), ((y, x), s, rep)) (lr : ints) =
