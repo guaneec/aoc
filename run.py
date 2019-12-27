@@ -39,11 +39,14 @@ parser.add_argument('yearday', action=YearDayAction, help=
 ex: 2015.1 | 2016,2017.2,3
 ''')
 parser.add_argument('names', nargs='*', default=list(commands))
+parser.add_argument('--save', action='store_true')
 args = parser.parse_args()
 
 
 
 cwd = os.getcwd()
+
+datadir = (Path(__file__).parent / 'data').resolve()
 
 for y in args.years:
     for d in args.days:
@@ -63,7 +66,12 @@ for y in args.years:
             if args.command == 'run':
                 print(f'Running {k}')
                 print('>', run_cmd)
-                run(run_cmd, check=True, shell=True)
+                p = run(run_cmd, check=True, shell=True, capture_output=True)
+                print(str(p.stdout, 'utf-8'), end='')
+                if args.save:
+                    with open(datadir / f'{y}/{d:02d}.output.txt', 'wb') as f:
+                        f.write(p.stdout)
+                        print(f'Output saved to {f.name}')
             elif args.command == 'bench':
                 print(f'Benching {k}')
                 bench_cmd = f'hyperfine -w 1 -m 2  "{run_cmd}"'
