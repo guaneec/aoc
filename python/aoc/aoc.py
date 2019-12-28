@@ -4,6 +4,7 @@ import subprocess
 from queue import PriorityQueue
 from dataclasses import dataclass, field
 from typing import Any
+from itertools import chain, combinations
 
 @dataclass(order=True)
 class PrioritizedItem:
@@ -52,6 +53,29 @@ def dij(seeds, neighbors):
             dists[nn] = dNew
             q.put_nowait(PrioritizedItem(dNew, nn))
 
+def ceildiv(a, b):
+    return (a + b - 1) // b
+
+def astar(seeds, neighbors, h):
+    q = PriorityQueue()
+    dists = {}
+    for s in seeds:
+        dists[s] = 0
+        q.put_nowait(PrioritizedItem(h(s), s))
+    
+    while not q.empty():
+        pi = q.get_nowait()
+        n = pi.item
+        g = dists[n]
+        yield g, n
+        for ng, nn in neighbors(n):
+            gNew = g + ng
+            if nn in dists and dists[nn] <= gNew:
+                continue
+            dists[nn] = gNew
+            q.put_nowait(PrioritizedItem(gNew + h(nn), nn))
+    
+
 def rep(f, x, g=lambda x: x):
     s = set()
     while True:
@@ -60,3 +84,7 @@ def rep(f, x, g=lambda x: x):
             return xx
         s.add(xx)
         x = f(x)
+
+
+def combrange(p, rmin, rmax):
+    return chain.from_iterable( combinations(p, r) for r in range(rmin, rmax) )

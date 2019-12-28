@@ -2,6 +2,7 @@ from .util import getinput
 import doctest
 from collections import Counter
 from itertools import combinations, product, chain
+from ..aoc import combrange
 import numpy as np
 import re
 
@@ -44,9 +45,6 @@ Defense +1   20     0       1
 Defense +2   40     0       2
 Defense +3   80     0       3
 '''.strip().split('\n\n')])
-
-def combrange(p, rmin, rmax):
-    return chain.from_iterable( combinations(p, r) for r in range(rmin, rmax) )
 
 def storeiter(store, ns):
     return (np.array(sum(sum(x) for x in z)) for z in product(*(combrange(cat, nmin, nmax) for (nmin, nmax), cat in zip(ns, store))))

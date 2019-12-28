@@ -66,16 +66,18 @@ for y in args.years:
             if args.command == 'run':
                 print(f'Running {k}')
                 print('>', run_cmd)
-                p = run(run_cmd, shell=True, encoding='utf-8', capture_output=True)
-                if p.stdout:
-                    print(p.stdout, end='')
-                if p.stderr:
-                    print(p.stderr, end='')
-                p.check_returncode()
                 if args.save:
+                    p = run(run_cmd, shell=True, encoding='utf-8', capture_output=True)
+                    if p.stdout:
+                        print(p.stdout, end='')
+                    if p.stderr:
+                        print(p.stderr, end='')
+                    p.check_returncode()
                     with open(datadir / f'{y}/{d:02d}.output.txt', 'w') as f:
                         f.write(p.stdout)
                         print(f'Output saved to {f.name}')
+                else:
+                    p = run(run_cmd, shell=True, check=True)
             elif args.command == 'bench':
                 print(f'Benching {k}')
                 bench_cmd = f'hyperfine -w 1 -m 2  "{run_cmd}"'
