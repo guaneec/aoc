@@ -23,6 +23,9 @@ commands = {
         'build': 'stack ghc app/{y}/{d}/Main.hs',
         'run': str(Path('./haskell/app/{y}/{d}/Main.exe').resolve())
     },
+    'wolfram': {
+        'run': f"wolframscript -file {str(Path('./wolfram/{y}/{d}.wl').resolve())}"
+    }
 }
 
 
