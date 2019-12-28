@@ -47,30 +47,49 @@ def nb(n):
                 yield ee, tuple(ffrom if i == e else fto if i == ee else floors[i] for i in range(len(floors)))
 
 def nb1(n):
-    for x in nb(n):
+    for x in set(canon(y) for y in nb(n)):
         yield 1, x
 
 def show(n):
     e, floors = n
     return e, [[t[:2]+'GM'[c] for (t, c) in f] for f in floors]
-    
+
+def toPairs(floors):
+    d = defaultdict(lambda: [0, 0])
+    for i, f in enumerate(floors):
+        for t, c in f:
+            d[t][c] = i      
+    return tuple(sorted(map(tuple, d.values())))
+
+def fromPairs(pairs):
+    o = [[], [], [], []]
+    for i, (g, m) in enumerate(pairs):
+        o[g].append((i, False))
+        o[m].append((i, True))
+    return tuple(map(frozenset, o))
+
+def canon(n):
+    return n[0], fromPairs(toPairs(n[1]))
+
 def done(n):
     e, floors = n
     return not any(floors[:-1])
 
 n = parse(s)
 
-for d, nn in astar([n], nb1, h):
-    if done(nn):
-        print(d)
-        break
 
 n2 = (n[0], tuple(n[1][i] | (set() if i != 0 else set((
         ('elerium', True), ('elerium', False), ('dilithium', True), ('dilithium', False)
     ))) for i in range(len(n[1]))) )
 
 
-for d, nn in astar([n2], nb1, h):
+for d, nn in astar([canon(n)], nb1, h):
+    if done(nn):
+        print(d)
+        break
+
+
+for d, nn in astar([canon(n2)], nb1, h):
     if done(nn):
         print(d)
         break
