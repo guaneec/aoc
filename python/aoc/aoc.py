@@ -40,6 +40,7 @@ def dij(seeds, neighbors):
     q = PriorityQueue()
     dists = {}
     for s in seeds:
+        dists[s] = 0
         q.put_nowait(PrioritizedItem(0, s))
     
     while not q.empty():
@@ -88,3 +89,13 @@ def rep(f, x, g=lambda x: x):
 
 def combrange(p, rmin, rmax):
     return chain.from_iterable( combinations(p, r) for r in range(rmin, rmax) )
+
+
+def adj4(xy):
+    x, y = xy
+    return [
+        (x, y+1),
+        (x, y-1),
+        (x+1, y),
+        (x-1, y),
+    ]

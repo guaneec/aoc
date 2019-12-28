@@ -1,16 +1,7 @@
 from .util import getinput
-from ..aoc import rep
+from ..aoc import rep, adj4
 import doctest
 from itertools import product
-
-def adj4(xy):
-    x, y = xy
-    return [
-        (x, y+1),
-        (x, y-1),
-        (x+1, y),
-        (x-1, y),
-    ]
 
 def adj4r(xyd):
     x, y, d = xyd
