@@ -99,3 +99,9 @@ def adj4(xy):
         (x+1, y),
         (x-1, y),
     ]
+
+def find_inc(l, h, pred):
+    if l + 1 == h:
+        return h
+    m = (l + h) // 2
+    return find_inc(l, m, pred) if pred(m) else find_inc(m, h, pred)
