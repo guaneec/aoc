@@ -2,7 +2,7 @@ import strutils
 import  md5
 import ../aoc
 
-let s = aocin(2016, 5).strip()
+let s = strip(aocin(2016, 5))
 var c = 0
 var d = 0
 var p2 = "________"
