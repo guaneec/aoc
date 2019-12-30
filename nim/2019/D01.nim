@@ -7,7 +7,7 @@ proc fuel(mass: int): int =
 proc fuel2(mass: int): int =
     let f = fuel(mass)
     if f <= 0:
-        return f
+        return 0
     return f + fuel2(f)
 
 let f = aocin(2019, 1)
