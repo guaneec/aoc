@@ -1,4 +1,5 @@
 import strutils
+import ../aoc
 
 proc fuel(mass: int): int =
     return mass div 3 - 2
@@ -9,7 +10,7 @@ proc fuel2(mass: int): int =
         return f
     return f + fuel2(f)
 
-let f = readFile("../../data/2019/01.input.txt")
+let f = aocin(2019, 1)
 
 var s1, s2 = 0
 for line in splitLines(f.strip()):
