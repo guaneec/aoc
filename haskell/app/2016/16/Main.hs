@@ -18,6 +18,7 @@ import           Data.Maybe
 import           Crypto.Hash
 import           Crypto.Hash.Algorithms
 import           Data.ByteString.Char8          ( pack )
+import           Data.Bits
 
 tf '1' = True
 tf '0' = False
@@ -25,11 +26,12 @@ tf '0' = False
 weave :: [a] -> [a] -> [a]
 weave l1 l2 = concatMap (\(a, b) -> [a, b]) $ zip l1 l2
 
-drag :: [Bool] -> [Bool]
-drag l = l ++ dt l
-  where dt l = let o = False:(map not $ reverse l) in o ++ dt (l ++ o)
+drag :: [Bool]
+drag = f <$> [(1 :: Int) ..]
+  where f n = (/= 0) $ (.&. n) $ (`shiftL` 1) $ n .&. (-n)
 
-drags l = concat $ weave (cycle [l, map not $ reverse l]) (map (\x->[x]) $ drag [])
+drags l =
+  concat $ weave (cycle [l, map not $ reverse l]) (map (\x -> [x]) $ drag)
 
 fromba :: String -> [Bool]
 fromba = map tf . takeWhile isDigit
@@ -38,9 +40,9 @@ toba :: [Bool] -> String
 toba = concatMap (show . fromEnum)
 
 checksum :: [Bool] -> String
-checksum l = toba $ if b == 1 then l else map (foldl' (/=) True)  (chunksOf b l)
-  where
-     (_, b) = until (odd . fst) (\(a, b) -> (a `div` 2, b * 2)) (length l, 1)
+checksum l = toba $ if b == 1 then l else map (foldl' (/=) True) (chunksOf b l)
+ where
+  (_, b) = until (odd . fst) (\(a, b) -> (a `div` 2, b * 2)) (length l, 1)
 
 main :: IO ()
 main = do
