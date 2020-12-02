@@ -2,16 +2,16 @@ import requests
 from os import makedirs
 from pathlib import Path
 
-with open(Path(__file__) / "../session.txt") as f:
+with open(Path(__file__).parent  / "session.txt") as f:
     cookies = {"session": f.read().strip()}
 
-datadir = Path(__file__) / ('../data')
+datadir = Path(__file__).parent / 'data'
 
 
 
 print("fetching inputs...")
 
-for y in [2015, 2016, 2017, 2018, 2019]:
+for y in [2015, 2016, 2017, 2018, 2019, 2020]:
     diryear = datadir / str(y)
     makedirs(diryear, exist_ok=True)
     for i in range(1,26):
