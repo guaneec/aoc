@@ -12,7 +12,7 @@ commands = {
     'nim': {
         'dir': './nim',
         'src': '{y}/D{d}.nim',
-        'build': 'nim c --define:release {y}/D{d}.nim',
+        'build': 'nim c --define:release -o:{y}/D{d}.exe {y}/D{d}.nim',
         'run': str(Path('./nim/{y}/D{d}.exe').resolve()),
     },
     'kotlin': {

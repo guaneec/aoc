@@ -1,5 +1,7 @@
 from .util import getinput
 
+
+
 a = [int(line) for line in getinput(1).splitlines()]
 l = sorted(set(a))
 
