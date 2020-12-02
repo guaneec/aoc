@@ -7,7 +7,7 @@ commands = {
     'python': {
         'dir': './python',
         'src': 'aoc/{y}/{d}.py',
-        'run': 'python -m aoc.{y}.{d}',
+        'run': 'python3 -m aoc.{y}.{d}',
     },
     'nim': {
         'dir': './nim',

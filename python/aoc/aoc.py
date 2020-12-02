@@ -11,7 +11,7 @@ class PrioritizedItem:
     priority: int
     item: Any=field(compare=False)
 
-rootdir = Path(__file__) / '../../../'
+rootdir = Path(__file__).parent / '../../'
 def getinput(year, day):
     p = rootdir / f'data/{year}/{day:02d}.input.txt'
     if not p.is_file():
