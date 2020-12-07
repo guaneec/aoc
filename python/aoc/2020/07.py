@@ -1,4 +1,6 @@
 import re
+import functools
+
 
 from .util import getinput
 
@@ -14,9 +16,11 @@ for line in s.splitlines():
         this[match.group(2)] = int(match.group(1))
     graph[label] = this
 
+@functools.lru_cache(maxsize=None)
 def has_color(parent, child):
     return any(k == child or has_color(k, child) for k in graph[parent])
 
+@functools.lru_cache(maxsize=None)
 def n_bags(color):
     return sum((1 + n_bags(k)) * v for k, v in graph[color].items())
 
