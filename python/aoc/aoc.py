@@ -15,7 +15,7 @@ rootdir = Path(__file__).parent / '../../'
 def getinput(year, day):
     p = rootdir / f'data/{year}/{day:02d}.input.txt'
     if not p.is_file():
-        cp = subprocess.run(f"python3 {rootdir / 'data.py'}", stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        cp = subprocess.run(["python3",  rootdir / 'data.py'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         print(cp.stdout.decode('utf-8'))
         cp.check_returncode()
     with open(p) as f:
