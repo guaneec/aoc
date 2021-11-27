@@ -30,6 +30,11 @@ commands = {
     'wolfram': {
         'src': 'wolfram/{y}/{d}.wl',
         'run': f"wolframscript -file {str(Path('./wolfram/{y}/{d}.wl').resolve())}"
+    },
+    'rust': {
+        'dir': 'rust/{y}/d{d}',
+        'src': 'src/main.rs',
+        'run': 'cargo run --release',
     }
 }
 
@@ -69,7 +74,11 @@ for y in args.years:
             os.chdir(cwd)
             yd = dict(y=y, d=f'{d:02d}')
             if 'dir' in v:
-                os.chdir(v['dir'])
+                try:
+                    os.chdir(v['dir'].format(**yd))
+                except FileNotFoundError:
+                    print('dir not found')
+                    continue
             exists = Path(v['src'].format(**yd)).is_file()
             if args.command == 'ls':
                 if exists:

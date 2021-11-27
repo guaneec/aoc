@@ -4,3 +4,5 @@ __pycache__/
 *.ipynb
 session.txt
 *.exe
+rust/**/target/
+.vscode/
