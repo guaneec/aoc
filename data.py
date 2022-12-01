@@ -11,7 +11,7 @@ datadir = Path(__file__).parent / 'data'
 
 print("fetching inputs...")
 
-for y in [2015, 2016, 2017, 2018, 2019, 2020, 2021]:
+for y in [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022]:
     diryear = datadir / str(y)
     makedirs(diryear, exist_ok=True)
     for i in range(1,26):
