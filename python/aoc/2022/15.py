@@ -22,8 +22,8 @@ def corners(u11, v11, u21, v21, u12, v12, u22, v22):
             yield from intersect(u, v12+1, v22-1, v, u11+1, u21-1)
 
 suvs = [] # (u1, v1, u2, v2)
-z = set()
-
+es = []
+bs = set()
 for l in s.splitlines():
     m = re.match(r, l)
     sx, sy, bx, by = map(int, m.groups())
@@ -31,18 +31,25 @@ for l in s.splitlines():
     bu, bv = bx + by, bx - by
     d = abs(sx-bx) + abs(sy-by)
     dx = d - abs(sy - yy)
-    for x in range(sx-dx, sx+dx+1):
-        if (x, yy) != (bx, by):
-            z.add(x)
+    if dx >= 0:
+        es.extend(((sx-dx, 1), (sx+dx+1, -1)))
+        if by == yy:
+            bs.add(bx)
     suvs.append((su-d-1, sv-d-1, su+d+1, sv+d+1))
+t = 0
+p1 = -len(bs)
+prev = 0
+for x, d in sorted(es):
+    p1 += (x - prev) * (t > 0)
+    t += d
+    prev = x
+print(p1)
 
-print(len(z))
-
-def f():
+def p2():
     for uv1, uv2 in combinations(suvs, 2):
         for u, v in corners(*uv1, *uv2):
             if not any(u1 < u < u2 and v1 < v < v2 for u1, v1, u2, v2 in suvs):
                 x, y = (u+v) // 2, (u-v) // 2
                 if (u+v) % 2 == 0 and  0 <= x <= Y and 0 <= y <= Y:
                     return x * 4000000 + y
-print(f())
+print(p2())
