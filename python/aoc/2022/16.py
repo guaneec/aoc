@@ -44,34 +44,18 @@ def nbb(node):
     if not stepped:
         yield (T-tx+1) * l1, None
 
+logs = defaultdict(int)
 for d, node in dij([('AA', 1, tuple())], nbb):
     if node is None:
         print(ss*T-d)
         break
+    elif node[1] <= 26:
+        x, tx, op = node
+        logs[op] = max(logs[op], ss*26-d-(26+1-tx)* sum(v for k, v in valves.items() if k not in op))
 
-T = 26
-def nbb(node):
-    x, tx, e, te, op = node
-    if (tx, x) > (te, e):
-        yield from nbb((e, te, x, tx, op))
-        return
-    stepped = False
-    l1 = sum(v for k, v in valves.items() if k not in op)
-    for n, d in nb(x):
-        if n in op or tx+d+1 > T or tx + d+1 < te:
-            continue
-        stepped = True
-        yield (tx+d+1-te) * l1, (n, tx+d+1, e, te, tuple(sorted(op + (n,))))
-    for n, d in nb(e):
-        if n in op or te+d+1 > T:
-            continue
-        stepped = True
-        yield (d+1) * l1, (n, te+d+1, x, tx, tuple(sorted(op + (n,))))
-    if not stepped:
-        yield (T-te+1) * l1, None
-
-
-for d, node in dij([('AA', 1, 'AA', 1, tuple())], nbb):
-    if node is None:
-        print(ss*T-d)
-        break
+print(max(
+    v1 + v2
+    for k1, v1 in logs.items()
+    for k2, v2 in logs.items()
+    if v1 <= v2 and not any(i in k1 for i in k2)
+))
