@@ -8,6 +8,7 @@ fn main() {
     let mut valves = HashMap::new();
     let mut paths = HashMap::new();
     let mut i2a = vec![];
+    let mut i2x = vec![];
     for l in s.split_terminator("\n") {
         let cap = re.captures(l).unwrap();
         let a = cap.get(1).unwrap().as_str();
@@ -15,9 +16,14 @@ fn main() {
         let b: Vec<&str> = cap.get(3).unwrap().as_str().split(", ").collect();
         valves.insert(a, x);
         paths.insert(a, b);
-        i2a.push(a);
+        if a == "AA" || x > 0 {
+            i2a.push(a);
+            i2x.push(x);
+        }
     }
+    let iaa = i2a.iter().position(|&u| u == "AA").unwrap();
     let mut dd = HashMap::new();
+    let mut dd2: Vec<Vec<(i32, usize)>> = std::iter::repeat(vec![]).take(i2a.len()).collect();
     for &x in valves.keys() {
         if x != "AA" && valves[x] == 0 {
             continue;
@@ -34,6 +40,7 @@ fn main() {
             let i = q.pop_front().unwrap();
             if valves[i] > 0 && d > 0 {
                 v.push((d, i));
+                dd2[i2a.iter().position(|&u| u == x).unwrap()].push((d, i2a.iter().position(|&u| u == i).unwrap()))
             }
             for &nb in paths[i].iter() {
                 if seen.contains(nb) { continue; }
@@ -54,7 +61,7 @@ fn main() {
     {
         let mut q = BinaryHeap::new();
         let end = 30;
-        q.push(Reverse((0, ("AA", 1, vec![]))));
+        q.push(Reverse((0, (iaa, 1, 0))));
         let mut dists = HashMap::new();
         let mut p1 = -1;
         while !q.is_empty() {
@@ -68,13 +75,10 @@ fn main() {
                 p1 = s1 * end - d;
                 break;
             }
-            let ss1: i32 = valves.iter().filter(|&(k, _v)| !open.contains(k)).map(|(_k, v)| v).sum();
-            for (dn, y) in dd[x].iter() {
-                if t + dn + 1 > end || open.contains(&y) { continue; }
-                let mut open = open.clone();
-                open.push(y);
-                open.sort();
-                q.push(Reverse((d + ss1 * (dn + 1), (y, t + dn + 1, open))));
+            let ss1: i32 = (0..i2x.len()).filter(|&i| open >> i & 1 == 0).map(|i| i2x[i]).sum();
+            for (dn, y) in dd2[x].iter().copied() {
+                if t + dn + 1 > end || open >> y == 1 { continue; }
+                q.push(Reverse((d + ss1 * (dn + 1), (y, t + dn + 1, open | 1 << y))));
             }
             q.push(Reverse((d + ss1 * (end - t + 1), (x, end+1, open))));
         }
@@ -83,7 +87,7 @@ fn main() {
     {
         let mut q = BinaryHeap::new();
         let end = 26;
-        q.push(Reverse((0, ("AA", 1, "AA", 1, vec![]))));
+        q.push(Reverse((0, (iaa, 1, iaa, 1, 0))));
         let mut dists = HashMap::new();
         let mut p2 = -1;
         while !q.is_empty() {
@@ -97,20 +101,14 @@ fn main() {
                 p2 = s1 * end - d;
                 break;
             }
-            let ss1: i32 = valves.iter().filter(|&(k, _v)| !open.contains(k)).map(|(_k, v)| v).sum();
-            for (dn, y) in dd[x].iter() {
-                if t + dn + 1 > end || t + dn + 1 < t2 || open.contains(&y) { continue; }
-                let mut open = open.clone();
-                open.push(y);
-                open.sort();
-                q.push(Reverse((d + ss1 * (t + dn + 1 - t2), (x2, t2, y, t + dn + 1, open))));
+            let ss1: i32 = (0..i2x.len()).filter(|&i| open >> i & 1 == 0).map(|i| i2x[i]).sum();
+            for (dn, y) in dd2[x].iter().copied() {
+                if t + dn + 1 > end || t + dn + 1 < t2 || open >> y == 1 { continue; }
+                q.push(Reverse((d + ss1 * (t + dn + 1 - t2), (x2, t2, y, t + dn + 1, open | 1 << y))));
             }
-            for (dn, y) in dd[x2].iter() {
-                if t2 + dn + 1 > end || open.contains(&y) { continue; }
-                let mut open = open.clone();
-                open.push(y);
-                open.sort();
-                q.push(Reverse((d + ss1 * (dn + 1), (x, t, y, t2 + dn + 1, open))));
+            for (dn, y) in dd2[x2].iter().copied() {
+                if t2 + dn + 1 > end || open >> y == 1 { continue; }
+                q.push(Reverse((d + ss1 * (dn + 1), (x, t, y, t2 + dn + 1, open | 1 << y))));
             }
             q.push(Reverse((d + ss1 * (end - t2 + 1), (x, end+1, x2, end+1, open))));
         }
