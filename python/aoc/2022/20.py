@@ -10,14 +10,23 @@ class Node:
         self.prev = None
         self.v = v
     
-    def movefront(self):
-        n = self.next
-        n.next.prev = self
-        self.prev.next = n
-        self.next = n.next
-        n.prev = self.prev
-        self.prev = n
+    def movefront(self, steps):
+        n = self.nextn(steps)
+        if n is self:
+            return
+        nn = n.next
+        self.prev.next = self.next
+        self.next.prev = self.prev
         n.next = self
+        self.prev = n
+        nn.prev = self
+        self.next = nn
+
+    def nextn(self, steps):
+        it = self
+        for _ in range(steps):
+            it = it.next
+        return it
     
 for mult, rounds in [(1, 1), (811589153, 10)]:
     nodes = []
@@ -30,14 +39,5 @@ for mult, rounds in [(1, 1), (811589153, 10)]:
         nodes[i].prev = nodes[(n+i-1)%n]
     for _ in range(rounds):
         for x in nodes:
-            for _ in range(x.v % (n-1)):
-                x.movefront()
-    def disp():
-        a = [0]
-        it  = n0.next
-        while it != n0:
-            a.append(it.v)
-            it = it.next
-        return a
-    d = disp()
-    print(d[1000%n] + d[2000%n]  + d[3000%n])
+            x.movefront(x.v % (n-1))
+    print(sum(n0.nextn(x).v for x in (1000, 2000, 3000)))
