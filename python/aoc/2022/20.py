@@ -31,10 +31,6 @@ class Node:
     def height(self):
         return len(self.nexts)
 
-    def new_after(self, v) -> Node:
-        """Create a new node after this node"""
-        return Node(v).insert_after(self)
-
     def insert_after(self, anchor: Node) -> Node:
         """Place this floating node after anchor"""
         for i, ((dprv, prv), (dnxt, nxt)) in enumerate(zip(anchor.climb(True), anchor.nexts[0].target.climb(False))):
@@ -87,8 +83,9 @@ class Node:
             yield d, it
 
 for mult, rounds in [(1, 1), (811589153, 10)]:
-    nodes = [Node(a[0] * mult)]
-    nodes.extend(nodes[-1].new_after(x*mult) for x in a[1:])
+    nodes = [Node(x * mult) for x in a]
+    for prv, nxt in zip(nodes, nodes[1:]):
+        nxt.insert_after(prv)
     n0 = nodes[a.index(0)]
     for _ in range(rounds):
         for node in nodes:
