@@ -34,7 +34,8 @@ commands = {
     'rust': {
         'dir': 'rust/{y}/d{d}',
         'src': 'src/main.rs',
-        'run': 'cargo run --release',
+        'build': 'cargo build --release',
+        'run': 'target/release/d{d}',
     }
 }
 
@@ -112,6 +113,6 @@ for y in args.years:
                     p = run(run_cmd, shell=True, check=True)
             elif args.command == 'bench':
                 print(f'Benching {k}')
-                bench_cmd = f'hyperfine -w 1 -m 2  "{run_cmd}"'
+                bench_cmd = f'hyperfine -w 2 -m 2  "{run_cmd}"'
                 print('>', bench_cmd)
                 run(bench_cmd, check=True, shell=True)
