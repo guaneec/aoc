@@ -18,8 +18,9 @@ def move(elves, elf, t):
     return elf
 
 def f(elves, t):
-    c = Counter(move(elves, e, t) for e in elves)
-    return {ee if c[(ee := move(elves, e, t))] == 1 else e for e in elves}
+    a = [(e, move(elves, e, t)) for e in elves]
+    c = Counter(ee for _, ee in a)
+    return {ee if c[ee] == 1 else e for e, ee in a}
 
 elves = e0
 for i in range(10):
