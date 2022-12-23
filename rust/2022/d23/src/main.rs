@@ -1,4 +1,4 @@
-use std::collections::{HashSet, HashMap};
+use std::collections::HashSet;
 
 const DIRS: [(i32, i32); 7] = [(-1,0), (1,0), (0,-1), (0,1), (-1,0), (1,0), (0,-1)];
 const D8: [(i32, i32); 8] = [(0, 1), (0, -1), (-1, 0), (1, 0), (1, 1), (1, -1), (-1, 1), (-1, -1)];
@@ -20,11 +20,7 @@ fn main() {
     {
         let mut elves = elves.clone();
         for i in 0..10 {
-            let mut c: HashMap<Elf, u8> = HashMap::new();
-            for &e in elves.iter() {
-                *c.entry(dest(&elves, e, i)).or_default() += 1;
-            }
-            elves = elves.iter().map(|&e| if c[&dest(&elves, e, i)] == 1 {dest(&elves, e, i)} else {e}).collect();
+            step(&mut elves, i);
         }
         let imn = elves.iter().map(|e| e.0).min().unwrap();
         let imx = elves.iter().map(|e| e.0).max().unwrap();
@@ -36,20 +32,25 @@ fn main() {
     {
         let mut elves = elves.clone();
         for i in 0.. {
-            let prev = elves.clone();
-            elves.clear();
-            for &e in &prev {
-                let ee = dest(&prev, e, i);
-                if !elves.insert(ee) {
-                    elves.remove(&ee);
-                    elves.insert(e);
-                    elves.insert((ee.0*2-e.0, ee.1*2-e.1));
-                }
-            }
+            let prev = step(&mut elves, i);
             if prev == elves {
                 println!("{}", i+1);
                 break;
             }
         }
     }
+}
+
+fn step(elves: &mut HashSet<(i32, i32)>, i: usize) -> HashSet<(i32, i32)> {
+    let prev = elves.clone();
+    elves.clear();
+    for &e in &prev {
+        let ee = dest(&prev, e, i);
+        if !elves.insert(ee) {
+            elves.remove(&ee);
+            elves.insert(e);
+            elves.insert((ee.0*2-e.0, ee.1*2-e.1));
+        }
+    }
+    prev
 }
