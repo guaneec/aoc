@@ -36,10 +36,6 @@ fn main() {
     {
         let mut elves = elves.clone();
         for i in 0.. {
-            let mut c: HashMap<Elf, u8> = HashMap::new();
-            for &e in elves.iter() {
-                *c.entry(dest(&elves, e, i)).or_default() += 1;
-            }
             let prev = elves.clone();
             elves.clear();
             for &e in &prev {
