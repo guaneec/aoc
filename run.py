@@ -9,6 +9,11 @@ commands = {
         'src': 'aoc/{y}/{d}.py',
         'run': 'python3 -m aoc.{y}.{d}',
     },
+    'pypy': {
+        'dir': './python',
+        'src': 'aoc/{y}/{d}.py',
+        'run': 'pypy3 -m aoc.{y}.{d}',
+    },
     'nim': {
         'dir': './nim',
         'src': '{y}/D{d}.nim',
