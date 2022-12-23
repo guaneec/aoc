@@ -41,7 +41,15 @@ fn main() {
                 *c.entry(dest(&elves, e, i)).or_default() += 1;
             }
             let prev = elves.clone();
-            elves = elves.iter().map(|&e| if c[&dest(&elves, e, i)] == 1 {dest(&elves, e, i)} else {e}).collect();
+            elves.clear();
+            for &e in &prev {
+                let ee = dest(&prev, e, i);
+                if !elves.insert(ee) {
+                    elves.remove(&ee);
+                    elves.insert(e);
+                    elves.insert((ee.0*2-e.0, ee.1*2-e.1));
+                }
+            }
             if prev == elves {
                 println!("{}", i+1);
                 break;
