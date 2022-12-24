@@ -4,7 +4,7 @@ s = getinput(24)
 m = len(s.splitlines())
 n = len(s.splitlines()[0])
 i0, i1 = 0, m-1
-lefts, rights, downs, ups = [], [], [], []
+blizzards = []
 for i, l in enumerate(s.splitlines()):
     for j, c in enumerate(l):
         if c == '.':
@@ -12,10 +12,8 @@ for i, l in enumerate(s.splitlines()):
                 j0 = j
             if i == i1:
                 j1 = j
-        if c == '>': rights.append((i, j))
-        if c == '<': lefts.append((i, j))
-        if c == 'v': downs.append((i, j))
-        if c == '^': ups.append((i, j))
+        elif c in '^v<>':
+            blizzards.append((i, j, (c == 'v') - (c == '^'), (c == '>') - (c == '<')))
 z0 = (i0, j0)
 z1 = (i1, j1)
 
@@ -24,10 +22,8 @@ def f(t0, start, end):
     for t in count(t0):
         assert q
         blocked = {
-            *[(1+(ii-1-t-1)%(m-2), jj) for ii, jj in ups ],
-            *[(1+(ii-1+t+1)%(m-2), jj) for ii, jj in downs ],
-            *[(ii, 1+(jj-1-t-1)%(n-2)) for ii, jj in lefts ],
-            *[(ii, 1+(jj-1+t+1)%(n-2)) for ii, jj in rights ],
+            (1+(i-1+(t+1)*di)%(m-2), 1+(j-1+(t+1)*dj)%(n-2))
+            for i, j, di, dj in blizzards
         }
         qq = []
         for i, j in q:
