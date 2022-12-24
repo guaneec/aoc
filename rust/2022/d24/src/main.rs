@@ -1,60 +1,82 @@
-use std::collections::HashSet;
+const W: usize = 128;
+const H: usize = 32;
 
-struct Blizzard {
-    i0: i32,
-    j0: i32,
-    di: i32,
-    dj: i32,
-}
+type Buf = [[bool; W]; H];
+type Buf4 = [[bool; 2 * W]; 2 * H];
 
 fn main() {
     let s = std::fs::read_to_string("../../../data/2022/24.input.txt").unwrap();
-    let mut blizzards = vec![];
-    let m = s.split_terminator('\n').count() as i32;
-    let n = s.split_terminator('\n').next().unwrap().len() as i32;
-    let i0 = 0;
-    let i1 = m - 1;
+    let m = s.split_terminator('\n').count();
+    let n = s.split_terminator('\n').next().unwrap().len();
+    let i0 = 1;
+    let i1 = m;
     let mut j0 = 0;
     let mut j1 = 0;
+    let mut lefts: Buf4 = [[true; 2 * W]; 2 * H];
+    let mut rights: Buf4 = [[true; 2 * W]; 2 * H];
+    let mut ups: Buf4 = [[true; 2 * W]; 2 * H];
+    let mut downs: Buf4 = [[true; 2 * W]; 2 * H];
     for (i, line) in s.split_terminator('\n').enumerate() {
         for (j, c) in line.chars().enumerate() {
-            let (i, j) = (i as i32, j as i32);
             match c {
                 '.' => {
-                    if i == i0 { j0 = j; }
-                    if i == i1 { j1 = j; }
+                    if i + 1 == i0 {
+                        j0 = j + 1;
+                    }
+                    if i + 1 == i1 {
+                        j1 = j + 1;
+                    }
                 }
                 '#' => {}
                 _ => {
-                    blizzards.push( Blizzard {
-                        i0: i, j0: j, 
-                        di: match c {'^' => -1, 'v' => 1, _ => 0}, 
-                        dj: match c {'<' => -1, '>' => 1, _ => 0}, 
-                    })
+                    let a = match c {
+                        '<' => &mut lefts,
+                        '>' => &mut rights,
+                        '^' => &mut ups,
+                        'v' => &mut downs,
+                        _ => panic!(),
+                    };
+                    a[i + 1][j + 1] = false;
+                    a[i + 1 + m - 2][j + 1] = false;
+                    a[i + 1 + m - 2][j + 1 + n - 2] = false;
+                    a[i + 1][j + 1 + n - 2] = false;
                 }
             }
         }
     }
-    let f = |t0: i32, start, end| {
-        let mut q: HashSet<(i32, i32)> = [start].into_iter().collect();
+    let f = |t0: i32, start: (usize, usize), end: (usize, usize)| {
+        let mut q: Buf = [[false; W]; H];
+        q[start.0][start.1] = true;
         for t in t0.. {
-            let blocked: HashSet<(i32, i32)> = blizzards.iter().map(|b| (
-                1 + (b.i0 - 1 + b.di * (t + 1)).rem_euclid(m - 2),
-                1 + (b.j0 - 1 + b.dj * (t + 1)).rem_euclid(n - 2),
-            )).collect();
-            assert!(!q.is_empty());
-            let mut qq = vec![];
-            for &(i, j) in q.iter() {
-                if (i, j) == end { return t; }
-                for (ii, jj) in [(i,j),(i,j-1),(i,j+1),(i-1,j),(i+1,j)] {
-                    if (ii, jj) == start || (ii, jj) == end || (
-                        ii > 0 && ii < m-1 && jj > 0 && jj < n-1 && !blocked.contains(&(ii, jj))
-                    ) { qq.push((ii, jj)); }
+            if q[end.0][end.1] {
+                return t;
+            }
+            let mut qq = q.clone();
+            for i in 1..=m {
+                for j in 1..=n {
+                    qq[i][j] |= q[i - 1][j] | q[i + 1][j] | q[i][j - 1] | q[i][j + 1];
                 }
             }
-            q = qq.into_iter().collect();
+            for i in 2..=m - 1 {
+                for j in 2..=n - 1 {
+                    let (n, m) = (n as i32, m as i32);
+                    qq[i][j] &= lefts[i][j + (t + 1).rem_euclid(n - 2) as usize]
+                        & rights[i][j + (-t - 1).rem_euclid(n - 2) as usize]
+                        & ups[i + (t + 1).rem_euclid(m - 2) as usize][j]
+                        & downs[i + (-t - 1).rem_euclid(m - 2) as usize][j];
+                }
+            }
+            for j in 1..=n {
+                qq[i0][j] &= j == j0;
+                qq[i1][j] &= j == j1;
+            }
+            for i in 2..=m - 1 {
+                qq[i][1] = false;
+                qq[i][n] = false;
+            }
+            q = qq;
         }
-        panic!()
+        -1
     };
     let t1 = f(0, (i0, j0), (i1, j1));
     println!("{}", t1);
