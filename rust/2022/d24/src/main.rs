@@ -57,13 +57,14 @@ fn main() {
                     qq[i][j] |= q[i - 1][j] | q[i + 1][j] | q[i][j - 1] | q[i][j + 1];
                 }
             }
+            let d1 = (t + 1).rem_euclid(n as i32 - 2) as usize;
+            let d2 = (-t - 1).rem_euclid(n as i32 - 2) as usize;
+            let d3 = (t + 1).rem_euclid(m as i32 - 2) as usize;
+            let d4 = (-t - 1).rem_euclid(m as i32 - 2) as usize;
             for i in 2..=m - 1 {
                 for j in 2..=n - 1 {
-                    let (n, m) = (n as i32, m as i32);
-                    qq[i][j] &= lefts[i][j + (t + 1).rem_euclid(n - 2) as usize]
-                        & rights[i][j + (-t - 1).rem_euclid(n - 2) as usize]
-                        & ups[i + (t + 1).rem_euclid(m - 2) as usize][j]
-                        & downs[i + (-t - 1).rem_euclid(m - 2) as usize][j];
+                    qq[i][j] &=
+                        lefts[i][j + d1] & rights[i][j + d2] & ups[i + d3][j] & downs[i + d4][j];
                 }
             }
             for j in 1..=n {
