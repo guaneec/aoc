@@ -41,6 +41,11 @@ commands = {
         'src': 'src/main.rs',
         'build': 'cargo build --release',
         'run': 'target/release/d{d}',
+    },
+    'julia': {
+        'dir': 'julia/{y}',
+        'src': '{d}.jl',
+        'run': 'julia {d}.jl',
     }
 }
 
