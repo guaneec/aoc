@@ -48,7 +48,7 @@ fn main() {
                 if (i, j) == end { return t; }
                 for (ii, jj) in [(i,j),(i,j-1),(i,j+1),(i-1,j),(i+1,j)] {
                     if (ii, jj) == start || (ii, jj) == end || (
-                        ii != 0 && ii != m-1 && jj != 0 && jj != n-1 && !blocked.contains(&(ii, jj))
+                        ii > 0 && ii < m-1 && jj > 0 && jj < n-1 && !blocked.contains(&(ii, jj))
                     ) { qq.push((ii, jj)); }
                 }
             }
