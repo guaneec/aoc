@@ -5,18 +5,18 @@ s = getinput(7).strip()
 files = {}
 p = []
 for l in s.splitlines():
-    match l.split():
-        case ['$', 'cd', d]:
-            if d == '/':
-                p = []
-            elif d == '..':
-                p.pop()
-            else:
-                p.append(d)
-        case ['$', 'ls'] | ['dir', _]:
-            pass
-        case [a, b]:
-            files[tuple(p + [b])] = int(a)
+    a = l.split()
+    if a[:2] == ['$', 'cd']:
+        if a[-1] == '/':
+            p = []
+        elif a[-1] == '..':
+            p.pop()
+        else:
+            p.append(a[-1])
+    elif a[:2] == ['$', 'ls'] or a[0] == 'dir':
+        pass
+    else:
+        files[tuple(p + [a[1]])] = int(a[0])
 dirs = defaultdict(int)
 for k, v in files.items():
     for i in range(len(k)):

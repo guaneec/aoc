@@ -1,5 +1,13 @@
 from .util import getinput
-from math import prod, lcm
+from math import prod
+def gcd(x, y):
+    while y:
+        x, y = y, x % y
+    return x
+
+def lcm(a, b):
+    return (a * b) // gcd(a, b)
+
 s = getinput(11)
 for part in (1, 2):
     p = 1

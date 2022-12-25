@@ -80,13 +80,12 @@ def run(part):
     i, j = i0, j0
     di, dj = 0, 1
     for cmd in re.finditer('[0-9]+|L|R', cmds):
-        match cmd.group(0):
-            case 'L':
-                di, dj = -dj, di
-            case 'R':
-                di, dj = dj, -di
-            case x:
-                i, j, di, dj = step(part, int(x), i, j, di, dj)
+        if cmd.group(0) == 'L':
+            di, dj = -dj, di
+        elif cmd.group(0) == 'R':
+            di, dj = dj, -di
+        else:
+            i, j, di, dj = step(part, int(cmd.group(0)), i, j, di, dj)
     return 1000*(i+1)+4*(j+1)+[(0, 1), (1, 0), (0, -1), (-1, 0)].index((di, dj))
 
 print(run(1))
