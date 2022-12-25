@@ -13,14 +13,12 @@ def f(w):
 x = sum(map(f, s.splitlines()))
 
 def g(w):
-    while True:
-        if -2 <= w <= 2:
-            return '=-012'[w+2]
-        else:
-            r = w % 5
-            if r > 2:
-                r -= 5
-            return g((w-r)//5) + g(r)
+    o = []
+    while w:
+        r = w % 5
+        o.append('012=-'[r])
+        w = w // 5 + (r > 2)
+    return ''.join(reversed(o)) if o else '0'
 
 print(g(x))
             
