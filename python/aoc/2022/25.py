@@ -6,7 +6,7 @@ def f(w):
     b = 1
     o = 0
     for c in w[::-1]:
-        o += (list('=-012').index(c)-2) * b
+        o += ('=-012'.find(c)-2) * b
         b *= 5
     return o
 
