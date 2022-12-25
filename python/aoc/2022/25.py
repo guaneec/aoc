@@ -10,8 +10,7 @@ def f(w):
         b *= 5
     return o
 
-p1 = sum(map(f, s.strip().splitlines()))
-print(p1)
+x = sum(map(f, s.strip().splitlines()))
 
 def g(w):
     while True:
@@ -23,5 +22,5 @@ def g(w):
                 r -= 5
             return g((w-r)//5) + g(r)
 
-print(g(p1))
+print(g(x))
             
