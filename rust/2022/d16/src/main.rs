@@ -57,6 +57,7 @@ fn main() {
         }
         dd.insert(x, v);
     }
+    let mut logs: HashMap<i32, i32> = HashMap::new();
     let s1: i32 = valves.values().sum();
     {
         let mut q = BinaryHeap::new();
@@ -76,6 +77,13 @@ fn main() {
                 break;
             }
             let ss1: i32 = (0..i2x.len()).filter(|&i| open >> i & 1 == 0).map(|i| i2x[i]).sum();
+            if t <= 27 {
+                let cand: i32 = s1 * 26 - d - (27 - t) * ss1;
+                match logs.entry(open) {
+                    std::collections::hash_map::Entry::Occupied(mut o) => {o.insert(cand.max(*o.get()));},
+                    std::collections::hash_map::Entry::Vacant(v) => {v.insert(cand);},
+                }
+            }
             for (dn, y) in dd2[x].iter().copied() {
                 if t + dn + 1 > end || open >> y == 1 { continue; }
                 q.push(Reverse((d + ss1 * (dn + 1), (y, t + dn + 1, open | 1 << y))));
@@ -84,34 +92,7 @@ fn main() {
         }
         println!("{}", p1);
     }
-    {
-        let mut q = BinaryHeap::new();
-        let end = 26;
-        q.push(Reverse((0, (iaa, 1, iaa, 1, 0))));
-        let mut dists = HashMap::new();
-        let mut p2 = -1;
-        while !q.is_empty() {
-            let Reverse((d, state)) = q.pop().unwrap();
-            if dists.contains_key(&state) {
-                continue;
-            }
-            dists.insert(state.clone(), d);
-            let (x, t, x2, t2, open) = state;
-            if t > end {
-                p2 = s1 * end - d;
-                break;
-            }
-            let ss1: i32 = (0..i2x.len()).filter(|&i| open >> i & 1 == 0).map(|i| i2x[i]).sum();
-            for (dn, y) in dd2[x].iter().copied() {
-                if t + dn + 1 > end || t + dn + 1 < t2 || open >> y == 1 { continue; }
-                q.push(Reverse((d + ss1 * (t + dn + 1 - t2), (x2, t2, y, t + dn + 1, open | 1 << y))));
-            }
-            for (dn, y) in dd2[x2].iter().copied() {
-                if t2 + dn + 1 > end || open >> y == 1 { continue; }
-                q.push(Reverse((d + ss1 * (dn + 1), (x, t, y, t2 + dn + 1, open | 1 << y))));
-            }
-            q.push(Reverse((d + ss1 * (end - t2 + 1), (x, end+1, x2, end+1, open))));
-        }
-        println!("{}", p2);
-    }
+    let p2 = logs.iter().flat_map(|(&k, &v)| logs.iter().map(move |(&k2, &v2)| (k, k2, v+v2)))
+        .filter(|&(k1, k2, _v)| k1 & k2 == 0).map(|(_k1, _k2, v)| v).max().unwrap();
+    println!("{}", p2);
 }
