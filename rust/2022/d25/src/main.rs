@@ -11,13 +11,9 @@ impl FromStr for Snafu {
     type Err = SnafuErr;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let mut b = 1;
-        let mut o = 0;
-        for c in s.chars().rev() {
-            o += ("=-012".chars().position(|d| d == c).ok_or(SnafuErr)? as i64 - 2) * b;
-            b *= 5;
-        }
-        return Ok(Snafu(o));
+        s.chars().try_fold(0, |acc, c| {
+            "=-012".chars().position(|d| d == c).map(|x| x as i64 - 2 + acc * 5)
+        }).map(Snafu).ok_or(SnafuErr)
     }
 }
 
