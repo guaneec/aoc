@@ -10,7 +10,7 @@ def f(w):
         b *= 5
     return o
 
-x = sum(map(f, s.strip().splitlines()))
+x = sum(map(f, s.splitlines()))
 
 def g(w):
     while True:
