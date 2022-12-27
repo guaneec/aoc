@@ -83,13 +83,8 @@ fn step(elves: &mut Elves, i: usize) -> bool {
             continue; 
         }
         elves.0[*i as usize][*j as usize] = State::Empty;
-        (*i, *j) = match x {
-            State::Up => (*i-1, *j),
-            State::Down => (*i+1, *j),
-            State::Left => (*i, *j-1),
-            State::Right => (*i, *j+1),
-            _ => { panic!(); }
-        };
+        *i += (x == State::Down) as i16 - (x == State::Up) as i16;
+        *j += (x == State::Right) as i16 - (x == State::Left) as i16;
     }
     moved > 0
 }
